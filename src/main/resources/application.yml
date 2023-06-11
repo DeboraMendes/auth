@@ -1,0 +1,63 @@
+server:
+  host: localhost
+  port: 8080
+  base-url: http://${server.host}:${server.port}
+
+database:
+  host: ${AUTH_POSTGRESQL_HOST}
+  port: ${AUTH_POSTGRESQL_PORT}
+  name: ${AUTH_POSTGRESQL_DATABASE}
+  schema: auth
+  username: user_auth
+  password: ${AUTH_POSTGRESQL_PASS}
+
+spring:
+  application:
+    name: auth
+  datasource:
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}?ApplicationName=${spring.application.name}
+    username: ${database.username}
+    password: ${database.password}
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      default_schema: ${database.schema}
+    show-sql: ${AUTH_SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: ${AUTH_SHOW_SQL:false}
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: never
+
+jwt:
+  expires-at: 600000
+  secret-key: ${AUTH_JWT_SECRET_KEY}
+
+logging:
+  level:
+    com:
+      deboramendes:
+        auth: ${AUTH_APP_LOG:INFO}
+    org:
+      springframework:
+        jdbc:
+          datasource:
+            init: ${AUTH_DATABASE_LOG:INFO}
+
+open-api:
+  server:
+    url: ${server.base-url}
+    description:
+  contact:
+    email: contact@company.com
+    name: Company
+    url: https://company.com
+  info:
+    title: Auth API
+    version: 1.0.0
+    description: This API exposes endpoints to authentication and authorisation.
